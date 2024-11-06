@@ -22,6 +22,7 @@ import org.bukkit.scheduler.BukkitRunnable;
 
 import java.util.*;
 import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;
 import java.util.stream.Collectors;
@@ -37,7 +38,7 @@ public class StackingTask extends BukkitRunnable {
     private final ConfigurationSection configurationSection = UltimateStacker.getInstance().getMobFile();
     private final List<UUID> processed = new ArrayList<>();
 
-    private final Map<EntityType, Integer> entityStackSizes = new HashMap<>();
+    private final Map<EntityType, Integer> entityStackSizes = new ConcurrentHashMap<>();
     private final int maxEntityStackSize = Settings.MAX_STACK_ENTITIES.getInt(),
             minEntityStackSize = Settings.MIN_STACK_ENTITIES.getInt(),
             searchRadius = Settings.SEARCH_RADIUS.getInt(),
