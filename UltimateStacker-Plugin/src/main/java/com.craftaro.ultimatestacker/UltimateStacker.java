@@ -183,9 +183,9 @@ public class UltimateStacker extends SongodaPlugin {
         this.customEntityManager = new CustomEntityManager();
 
         guiManager.init();
-
-        if (ServerVersion.isServerVersionAtLeast(ServerVersion.V1_10))
+        if (Settings.STACK_ENTITIES.getBoolean() && ServerVersion.isServerVersionAtLeast(ServerVersion.V1_10)) {
             pluginManager.registerEvents(new BreedListeners(this), this);
+        }
         pluginManager.registerEvents(new BlockListeners(this), this);
         pluginManager.registerEvents(new DeathListeners(this), this);
         pluginManager.registerEvents(new ShearListeners(this), this);
@@ -244,10 +244,10 @@ public class UltimateStacker extends SongodaPlugin {
             }
         });
         this.stackingTask = new StackingTask(this);
+        this.breedingTask = new BreedingTask(this);
 
         //Start stacking task
         if (Settings.STACK_ENTITIES.getBoolean()) {
-            this.breedingTask = new BreedingTask(this);
             stackingTask.start();
         }
 
