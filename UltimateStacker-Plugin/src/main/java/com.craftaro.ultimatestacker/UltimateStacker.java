@@ -243,8 +243,8 @@ public class UltimateStacker extends SongodaPlugin {
                 }
             }
         });
-        this.stackingTask = new StackingTask(this);
         this.breedingTask = new BreedingTask(this);
+        this.stackingTask = new StackingTask(this);
 
         //Start stacking task
         if (Settings.STACK_ENTITIES.getBoolean()) {
