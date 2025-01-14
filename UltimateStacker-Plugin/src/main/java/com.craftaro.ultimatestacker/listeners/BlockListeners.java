@@ -305,7 +305,18 @@ public class BlockListeners implements Listener {
         ItemStack item = player.getInventory().getItemInHand();
 
         SpawnerStack stack = UltimateStackerApi.getSpawnerStackManager().getSpawner(block);
-        if (stack == null) return;
+        if (stack == null) {
+            //handle vanilla spawner breaking here
+            //TODO simplify duplicate code
+            if (player.hasPermission("ultimatestacker.spawner.nosilkdrop") || item.getEnchantments().containsKey(Enchantment.SILK_TOUCH) && player.hasPermission("ultimatestacker.spawner.silktouch")) {
+                ItemStack spawner = Methods.getSpawnerItem(spawnedEntityType, 1);
+                if (player.getInventory().firstEmpty() == -1 || !Settings.SPAWNERS_TO_INVENTORY.getBoolean())
+                    block.getWorld().dropItemNaturally(block.getLocation().add(.5, 0, .5), spawner);
+                else
+                    player.getInventory().addItem(spawner);
+            }
+            return;
+        }
 
         event.setCancelled(true);
 
@@ -342,7 +353,6 @@ public class BlockListeners implements Listener {
             else
                 player.getInventory().addItem(spawner);
         }
-
     }
 
     private int getSpawnerAmount(ItemStack item) {
