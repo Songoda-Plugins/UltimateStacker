@@ -292,13 +292,6 @@ public class StackingTask extends BukkitRunnable {
                 }
             }
         }
-
-        //Set a bedrock in the top left corner of the chunks
-        for (CachedChunk chunk : chunks) {
-            int x = chunk.getX() * 16;
-            int z = chunk.getZ() * 16;
-            world.getBlockAt(x, 319, z).setType(XMaterial.BEDROCK.parseMaterial());
-        }
         return chunks;
     }
 
