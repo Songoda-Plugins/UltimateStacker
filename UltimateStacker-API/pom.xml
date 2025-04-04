@@ -2,9 +2,9 @@
     <modelVersion>4.0.0</modelVersion>
 
     <parent>
-        <groupId>com.craftaro</groupId>
+        <groupId>com.songoda</groupId>
         <artifactId>UltimateStacker-Parent</artifactId>
-        <version>3.6.0</version>
+        <version>4.0.0</version>
     </parent>
     <artifactId>UltimateStacker-API</artifactId>
     <version>1.0.0-SNAPSHOT</version>
@@ -30,7 +30,7 @@
                     <injections>
                         <injection>
                             <value>${project.version}</value>
-                            <pointCut>com.craftaro.ultimatestacker.api.UltimateStackerApi.getVersion</pointCut>
+                            <pointCut>com.songoda.ultimatestacker.api.UltimateStackerApi.getVersion</pointCut>
                         </injection>
                     </injections>
                 </configuration>
@@ -60,9 +60,9 @@
 
     <dependencies>
         <dependency>
-            <groupId>com.craftaro</groupId>
-            <artifactId>CraftaroCore</artifactId>
-            <version>${craftaro.coreVersion}</version>
+            <groupId>com.songoda</groupId>
+            <artifactId>SongodaCore</artifactId>
+            <version>${songoda.coreVersion}</version>
             <scope>provided</scope>
         </dependency>
 

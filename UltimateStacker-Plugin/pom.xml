@@ -2,9 +2,9 @@
     <modelVersion>4.0.0</modelVersion>
 
     <parent>
-        <groupId>com.craftaro</groupId>
+        <groupId>com.songoda</groupId>
         <artifactId>UltimateStacker-Parent</artifactId>
-        <version>3.6.0</version>
+        <version>4.0.0</version>
     </parent>
     <artifactId>UltimateStacker-Plugin</artifactId>
 
@@ -31,8 +31,8 @@
 
                             <relocations>
                                 <relocation>
-                                    <pattern>com.craftaro.core</pattern>
-                                    <shadedPattern>com.craftaro.ultimatestacker.core</shadedPattern>
+                                    <pattern>com.songoda.core</pattern>
+                                    <shadedPattern>com.songoda.ultimatestacker.core</shadedPattern>
                                 </relocation>
                             </relocations>
 
@@ -48,7 +48,7 @@
                                 </filter>
 
                                 <filter>
-                                    <artifact>com.craftaro:CraftaroCore</artifact>
+                                    <artifact>com.songoda:SongodaCore</artifact>
                                     <excludeDefaults>false</excludeDefaults>
                                     <includes>
                                         <include>**/nms/v*/**</include>
@@ -109,7 +109,7 @@
 
     <dependencies>
         <dependency>
-            <groupId>com.craftaro</groupId>
+            <groupId>com.songoda</groupId>
             <artifactId>UltimateStacker-API</artifactId>
             <version>1.0.0-SNAPSHOT</version>
             <scope>compile</scope>
@@ -123,9 +123,9 @@
         </dependency>
 
         <dependency>
-            <groupId>com.craftaro</groupId>
-            <artifactId>CraftaroCore</artifactId>
-            <version>${craftaro.coreVersion}</version>
+            <groupId>com.songoda</groupId>
+            <artifactId>SongodaCore</artifactId>
+            <version>${songoda.coreVersion}</version>
             <scope>compile</scope>
         </dependency>
 

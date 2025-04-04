@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?><project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
-    <groupId>com.craftaro</groupId>
+    <groupId>com.songoda</groupId>
     <artifactId>UltimateStacker-Parent</artifactId>
     <packaging>pom</packaging>
-    <version>3.6.0</version>
+    <version>4.0.0</version>
 
     <modules>
         <module>UltimateStacker-API</module>
@@ -13,10 +13,10 @@
 
     <name>UltimateStacker</name>
     <description>The simple yet powerful stacking plugin built to meet all your stacking needs</description>
-    <url>https://craftaro.com/marketplace/product/16</url>
+    <url>https://songoda.com/product/ultimatestacker-16</url>
 
     <properties>
-        <craftaro.coreVersion>3.8.0-SNAPSHOT</craftaro.coreVersion>
+        <songoda.coreVersion>3.9.0-SNAPSHOT</songoda.coreVersion>
 
         <maven.compiler.release>8</maven.compiler.release>
         <maven.compiler.target>1.8</maven.compiler.target>
@@ -28,13 +28,13 @@
     </properties>
 
     <issueManagement>
-        <url>https://discord.gg/craftaro</url>
+        <url>https://discord.gg/7TXM8xr2Ng</url>
         <system>Discord server</system>
     </issueManagement>
 
     <scm>
-        <url>https://github.com/craftaro/UltimateStacker</url>
-        <connection>scm:git:git://github.com/craftaro/UltimateStacker.git</connection>
+        <url>https://github.com/Songoda-Plugins/SongodaCore</url>
+        <connection>scm:git:git://github.com/Songoda-Plugins/UltimateStacker.git</connection>
     </scm>
 
     <repositories>
