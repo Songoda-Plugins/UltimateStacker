@@ -137,6 +137,8 @@ public class StackingTask extends BukkitRunnable {
 
     //Returns true if the entity is not stackable, and it will be removed from the list
     private boolean isEntityNotStackable(LivingEntity entity) {
+        if (!configurationSection.getBoolean("Mobs." + entity.getType().name() + ".Enabled")) return true;
+
         if (isMaxStack(entity)) return true;
 
         // Make sure we have the correct entity type and that it is valid.
@@ -146,9 +148,6 @@ public class StackingTask extends BukkitRunnable {
 
                 // Make sure the entity is not in love or in the breeding queue.
                 || breedingTask.isInQueue(entity.getUniqueId()))
-            return true;
-
-        if (!configurationSection.getBoolean("Mobs." + entity.getType().name() + ".Enabled"))
             return true;
 
         //Check nametag or custom entity
@@ -174,6 +173,11 @@ public class StackingTask extends BukkitRunnable {
     }
 
     private void processEntity(LivingEntity baseEntity, Location location, List<LivingEntity> entities) {
+        if (baseEntity instanceof EnderDragon) {
+            // Ender dragons are not stackable.
+            return;
+        }
+
         // Get the stack from the entity. It should be noted that this value will
         // be null if our entity is not a stack.
         EntityStack baseStack = plugin.getEntityStackManager().getStackedEntity(baseEntity);

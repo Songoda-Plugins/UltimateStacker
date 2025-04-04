@@ -148,7 +148,7 @@ public class LootablesManager {
             long amount = ThreadLocalRandom.current().nextLong((max - min) + 1) + min;
 
             if (loot.getMaterial() != null && amount > 0) {
-                ItemStack item = entity.getFireTicks() > 0
+                ItemStack item = (entity.getFireTicks() > 0 || (entity.getKiller() != null && entity.getKiller().getItemInHand().containsEnchantment(Enchantment.FIRE_ASPECT)))
                         ? loot.getBurnedMaterial() != null ? loot.getBurnedMaterial().parseItem() : loot.getMaterial().parseItem()
                         : loot.getMaterial().parseItem();
                 if (amount > MAX_INT) {
@@ -180,7 +180,7 @@ public class LootablesManager {
                 long childamount = ThreadLocalRandom.current().nextLong((childMax - childmin) + 1) + childmin;
 
                 if (childamount > 0) {
-                    ItemStack item = entity.getFireTicks() > 0
+                    ItemStack item = (entity.getFireTicks() > 0 || (entity.getKiller() != null && entity.getKiller().getItemInHand().containsEnchantment(Enchantment.FIRE_ASPECT)))
                             ? child.getBurnedMaterial() != null ? child.getBurnedMaterial().parseItem() : child.getMaterial().parseItem()
                             : child.getMaterial().parseItem();
                     if (childamount > MAX_INT) {
