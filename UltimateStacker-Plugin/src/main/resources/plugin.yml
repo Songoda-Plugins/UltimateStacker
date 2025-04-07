@@ -20,7 +20,7 @@ softdepend:
 loadbefore:
   - WorldGuard
 
-author: Craftaro
+author: Songoda
 website: ${project.parent.url}
 
 commands:
