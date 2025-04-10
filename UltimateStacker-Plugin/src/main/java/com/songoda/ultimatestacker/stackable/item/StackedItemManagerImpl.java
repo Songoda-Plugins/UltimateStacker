@@ -97,10 +97,7 @@ public class StackedItemManagerImpl implements StackedItemManager {
 
     @Override
     public boolean isStackedItem(Item item) {
-        if (item.hasMetadata("US_AMT")) {
-            return item.getItemStack().getAmount() != item.getMetadata("US_AMT").get(0).asInt();
-        }
-        return false;
+        return item.hasMetadata("US_AMT");
     }
 
     @Override
