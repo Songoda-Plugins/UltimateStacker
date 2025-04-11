@@ -25,13 +25,13 @@ jobs:
     steps:
       - uses: actions/checkout@v3
       - name: Prepare Workspace
-        uses: Songoda-Plugins/GH-Commons/.github/actions/setup_workspace@master
+        uses: Songoda-Plugins/GH-Commons/.github/actions/setup_workspace@main
         with:
           maven_username: ${{ secrets.PLUGINS_MAVEN_REPO_USERNAME }}
           maven_password: ${{ secrets.PLUGINS_MAVEN_REPO_PASSWORD }}
 
       - name: Set project version
-        uses: Songoda-Plugins/GH-Commons/.github/actions/maven_set_project_version@master
+        uses: Songoda-Plugins/GH-Commons/.github/actions/maven_set_project_version@main
         with:
           append_snapshot: ${{ github.ref_type == 'tag' && 'false' || 'true' }}
           version: ${{ github.ref_type == 'tag' && github.ref_name || '' }}
@@ -42,7 +42,7 @@ jobs:
         run: mvn -B -Duser.name="GitHub Actions on $GITHUB_REPOSITORY (id=$GITHUB_RUN_ID)" clean package
 
       - name: Sign jar archives
-        uses: Songoda-Plugins/GH-Commons/.github/actions/sign_jars@master
+        uses: Songoda-Plugins/GH-Commons/.github/actions/sign_jars@main
         with:
           jar_file_selector: ${{ env.DEPLOYMENT_ARTIFACT_DIR }}/${{ env.DEPLOYMENT_ARTIFACT_SELECTOR }}
           keystore_gpg_encrypted: ${{ secrets.PLUGINS_JARSIGNER_KEYSTORE_GPG }}
