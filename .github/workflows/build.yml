@@ -63,7 +63,7 @@ jobs:
 
       - name: Deploy to Maven repo
         if: ${{ github.event_name == 'push' }}
-        uses: Songoda-Plugins/GH-Commons/.github/actions/maven_deploy@master
+        uses: Songoda-Plugins/GH-Commons/.github/actions/maven_deploy@main
         with:
           repository_url: ${{ vars.PLUGINS_MAVEN_REPO_URL_RELEASE }}
           repository_url_snapshots: ${{ vars.PLUGINS_MAVEN_REPO_URL_SNAPSHOT }}
@@ -72,7 +72,7 @@ jobs:
 
       - name: Deploy parent pom.xml to Maven repo
         if: ${{ github.event_name == 'push' }}
-        uses: Songoda-Plugins/GH-Commons/.github/actions/maven_deploy@master
+        uses: Songoda-Plugins/GH-Commons/.github/actions/maven_deploy@main
         with:
           repository_url: ${{ vars.PLUGINS_MAVEN_REPO_URL_RELEASE }}
           repository_url_snapshots: ${{ vars.PLUGINS_MAVEN_REPO_URL_SNAPSHOT }}
@@ -89,7 +89,7 @@ jobs:
     steps:
       - uses: actions/checkout@v3
       - name: Notify Webhook
-        uses: Songoda-Plugins/GH-Commons/.github/actions/discord_send_job_results@master
+        uses: Songoda-Plugins/GH-Commons/.github/actions/discord_send_job_results@main
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           webhook_url: ${{ secrets.DISCORD_BUILD_STATUS_WEBHOOK }}
