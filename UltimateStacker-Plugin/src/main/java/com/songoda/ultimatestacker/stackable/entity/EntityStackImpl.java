@@ -3,6 +3,7 @@ package com.songoda.ultimatestacker.stackable.entity;
 import com.songoda.core.compatibility.ServerVersion;
 import com.songoda.core.lootables.loot.Drop;
 import com.songoda.core.lootables.loot.DropUtils;
+import com.songoda.core.nms.Nms;
 import com.songoda.core.utils.EntityUtils;
 import com.songoda.ultimatestacker.UltimateStacker;
 import com.songoda.ultimatestacker.api.events.entity.EntityStackKillEvent;
@@ -244,9 +245,9 @@ public class EntityStackImpl implements EntityStack {
         if (amount <= 0) return null;
 
         LivingEntity entity = (LivingEntity) Objects.requireNonNull(location.getWorld()).spawnEntity(location, hostEntity.getType());
-        if (Settings.NO_AI.getBoolean())
-            //EntityUtils.setUnaware(entity); //TODO fix it for other versions
-            entity.setAI(false);
+        if (Settings.NO_AI.getBoolean()) {
+            Nms.getImplementations().getEntity().setMobAware(entity, false);
+        }
         this.hostEntity = entity;
         setAmount(amount--);
         updateNameTag();

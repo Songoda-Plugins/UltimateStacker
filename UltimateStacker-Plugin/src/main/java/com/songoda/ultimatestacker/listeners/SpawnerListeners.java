@@ -2,6 +2,7 @@ package com.songoda.ultimatestacker.listeners;
 
 import com.songoda.core.compatibility.CompatibleHand;
 import com.songoda.core.compatibility.ServerVersion;
+import com.songoda.core.nms.Nms;
 import com.songoda.core.third_party.de.tr7zw.nbtapi.NBT;
 import com.songoda.core.third_party.de.tr7zw.nbtapi.iface.ReadableNBT;
 import com.songoda.core.utils.EntityUtils;
@@ -71,8 +72,7 @@ public class SpawnerListeners implements Listener {
 
         spawnerStack.spawn(amountToSpawn, "EXPLOSION_NORMAL", null, (e) -> {
             if (Settings.NO_AI.getBoolean()) {
-                //EntityUtils.setUnaware(e); //TODO fix it with older versions
-                e.setAI(false);
+                Nms.getImplementations().getEntity().setMobAware(e, false);
             }
 
             if (mcmmo) {

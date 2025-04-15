@@ -2,6 +2,7 @@ package com.songoda.ultimatestacker.stackable.spawner;
 
 import com.songoda.core.database.Data;
 import com.songoda.core.database.SerializedLocation;
+import com.songoda.core.nms.Nms;
 import com.songoda.core.nms.world.SpawnedEntity;
 import com.songoda.third_party.com.cryptomorin.xseries.XMaterial;
 import com.songoda.core.utils.EntityUtils;
@@ -99,8 +100,7 @@ public class SpawnerStackImpl implements SpawnerStack {
         int finalToSpawn = toSpawn;
         return spawn(toSpawn, "EXPLOSION_NORMAL", null, (e) -> {
             if (noAI) {
-                //EntityUtils.setUnaware(e); //TODO fix it in older versions
-                e.setAI(false);
+                Nms.getImplementations().getEntity().setMobAware(e, false);
             }
 
             UltimateStacker.getInstance().getEntityStackManager().createStackedEntity(e, finalToSpawn);
