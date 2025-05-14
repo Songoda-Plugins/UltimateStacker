@@ -175,34 +175,48 @@ public class DeathListeners implements Listener {
 
     @EventHandler
     public void onEntityHit(EntityDamageByEntityEvent event) {
-        if (!(event.getDamager() instanceof Player) || ServerVersion.isServerVersionAtOrBelow(ServerVersion.V1_12))
-            return;
-
+        if (!(event.getDamager() instanceof Player)) return;
+        if (ServerVersion.isServerVersionAtOrBelow(ServerVersion.V1_12)) return;
         if (!(event.getEntity() instanceof LivingEntity)) return;
         LivingEntity entity = (LivingEntity) event.getEntity();
         if (!plugin.getEntityStackManager().isStackedEntity(entity)) return;
         EntityStack stack = plugin.getEntityStackManager().getStackedEntity(entity);
-
         Player player = (Player) event.getDamager();
+        applyToolDamageFromStack(player, stack.getAmount());
+    }
 
-        if (Settings.KILL_WHOLE_STACK_ON_DEATH.getBoolean() && Settings.REALISTIC_DAMAGE.getBoolean() && !player.getGameMode().equals(GameMode.CREATIVE)) {
-            ItemStack tool = player.getInventory().getItemInHand();
-            if (tool.getType().getMaxDurability() < 1 || (tool.getItemMeta() != null && (tool.getItemMeta().isUnbreakable()
-                    || (ServerProject.isServer(ServerProject.SPIGOT, ServerProject.PAPER) && tool.getItemMeta().isUnbreakable()))))
-                return;
+    public void applyToolDamageFromStack(Player player, int stackSize) {
+        if (!Settings.KILL_WHOLE_STACK_ON_DEATH.getBoolean()
+                || !Settings.REALISTIC_DAMAGE.getBoolean()
+                || player.getGameMode() == GameMode.CREATIVE) {
+            return;
+        }
 
-            int unbreakingLevel = tool.getEnchantmentLevel(Enchantment.DURABILITY);
+        ItemStack tool = ServerVersion.isServerVersionBelow(ServerVersion.V1_9)
+                ? player.getInventory().getItemInHand()
+                : player.getInventory().getItemInMainHand();
 
-            int actualDamage = 0;
-            for (int i = 0; i < stack.getAmount(); i++)
-                if (checkUnbreakingChance(unbreakingLevel))
-                    actualDamage++;
+        if (tool == null || tool.getType().getMaxDurability() < 1) return;
 
-            tool.setDurability((short) (tool.getDurability() + actualDamage));
+        if (tool.getItemMeta() != null && tool.getItemMeta().isUnbreakable()) return;
 
-            if (!this.hasEnoughDurability(tool, 1))
+        int unbreakingLevel = tool.getEnchantmentLevel(Enchantment.DURABILITY);
+        int actualDamage = 0;
+
+        for (int i = 0; i < stackSize; i++) {
+            if (checkUnbreakingChance(unbreakingLevel)) {
+                actualDamage++;
+            }
+        }
+
+        tool.setDurability((short) (tool.getDurability() + actualDamage));
+
+        if (!hasEnoughDurability(tool, 1)) {
+            if (ServerVersion.isServerVersionBelow(ServerVersion.V1_9)) {
                 player.getInventory().setItemInHand(null);
-
+            } else {
+                player.getInventory().setItemInMainHand(null);
+            }
         }
     }
 
