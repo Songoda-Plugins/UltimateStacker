@@ -108,6 +108,13 @@ public class EntityListeners implements Listener {
         if (plugin.isInstantStacking()) {
             LivingEntity spawningEntity = event.getEntity();
             EntityStackManager stackManager = plugin.getEntityStackManager();
+
+            String entityTypeName = spawningEntity.getType().name();
+            if (!mobsConfig.getBoolean("Mobs." + entityTypeName + ".Enabled")) {
+                event.getEntity().setMetadata("US_REASON", new FixedMetadataValue(plugin, spawnReason));
+                return;
+            }
+
             if (stackManager.isStackedEntity(spawningEntity)) return; //We don't want to stack split entities or respawned stacks
 
             List<LivingEntity> stackableFriends = plugin.getStackingTask().getSimilarEntitiesAroundEntity(spawningEntity, spawningEntity.getLocation());
