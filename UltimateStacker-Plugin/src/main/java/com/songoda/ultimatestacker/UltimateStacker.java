@@ -303,8 +303,14 @@ public class UltimateStacker extends SongodaPlugin {
         this.setLocale(getConfig().getString("System.Language Mode"), true);
         this.locale.reloadMessages();
 
-        if (stackingTask != null)
-            this.stackingTask.cancel();
+        // Check if the task is running, if not, we get an exception.
+        if (stackingTask != null) {
+            try {
+                // No docs how to handle if it's not running, and Bukkit.getScheduler().isCurrentlyRunning() does not help
+                // So just eat the exception in those rare cases.
+                this.stackingTask.cancel();
+            } catch (IllegalStateException ignored) {}
+        }
 
         this.stackingTask = new StackingTask(this);
         if (Settings.STACK_ENTITIES.getBoolean()) {
