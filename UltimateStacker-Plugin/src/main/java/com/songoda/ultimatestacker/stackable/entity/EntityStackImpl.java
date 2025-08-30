@@ -244,14 +244,18 @@ public class EntityStackImpl implements EntityStack {
     public synchronized LivingEntity takeOneAndSpawnEntity(Location location) {
         if (amount <= 0) return null;
 
-        LivingEntity entity = (LivingEntity) Objects.requireNonNull(location.getWorld()).spawnEntity(location, hostEntity.getType());
-        if (Settings.NO_AI.getBoolean()) {
-            Nms.getImplementations().getEntity().setMobAware(entity, false);
-        }
-        this.hostEntity = entity;
-        setAmount(amount--);
-        updateNameTag();
-        return entity;
+        return (LivingEntity) Objects.requireNonNull(location.getWorld()).spawn(location, Objects.requireNonNull(hostEntity.getType().getEntityClass()), spawnedEntity -> {
+            // It should always be a living entity, but just in case check it
+            if (spawnedEntity instanceof LivingEntity) {
+                LivingEntity livingEntity = (LivingEntity) spawnedEntity;
+                if (Settings.NO_AI.getBoolean()) {
+                    Nms.getImplementations().getEntity().setMobAware(livingEntity, false);
+                }
+                this.hostEntity = livingEntity;
+                setAmount(amount--);
+                updateNameTag();
+            }
+        });
     }
 
     @Override
