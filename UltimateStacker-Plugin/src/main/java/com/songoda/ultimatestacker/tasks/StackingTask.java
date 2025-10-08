@@ -154,21 +154,25 @@ public class StackingTask extends BukkitRunnable {
         if ((!stackManager.isStackedEntity(entity) && entity.getCustomName() != null) || plugin.getCustomEntityManager().getCustomEntity(entity) != null)
             return true;
 
-        // Allow spawn if stack reasons are set and match, or if from a spawner
+        // Check if entity is spawned from EpicSpawners
+        boolean isEpicSpawner = entity.hasMetadata("ESData") && !entity.getMetadata("ESData").isEmpty();
+        // Check if entity is spawned from UltimateStacker and get spawn reason
         final String spawnReason = entity.hasMetadata("US_REASON") && !entity.getMetadata("US_REASON").isEmpty()
                 ? entity.getMetadata("US_REASON").get(0).asString() : null;
-        List<String> stackReasons;
-        if (onlyStackFromSpawners) {
-            // If only stack from spawners is enabled, make sure the entity spawned from a spawner.
-            if (!"SPAWNER".equals(spawnReason))
-                return true;
-        } else if (!(stackReasons = this.stackReasons).isEmpty() && !stackReasons.contains(spawnReason)) {
-            // Only stack if on the list of events to stack
-            return true;
-        }
 
-        // If only stack on surface is enabled make sure the entity is on a surface then entity is stackable.
-        //return !onlyStackOnSurface || canFly(entity) || entity.getType().name().equals("SHULKER") || ((entity).isOnGround() || (ServerVersion.isServerVersionAtLeast(ServerVersion.V1_13) && (entity).isSwimming()));
+        if (onlyStackFromSpawners) {
+            // Only allow stacking if from a spawner (SPAWNER or SPAWNER_SPAWN) or EpicSpawners
+            boolean isFromAllowedSource = "SPAWNER".equals(spawnReason) ||
+                                       "SPAWNER_SPAWN".equals(spawnReason) ||
+                                       isEpicSpawner;
+            if (!isFromAllowedSource) {
+                return true;
+            }
+        } else if (!this.stackReasons.isEmpty()) {
+            if (!this.stackReasons.contains(spawnReason) && !isEpicSpawner) {
+                return true;
+            }
+        }
         return onlyStackOnSurface && canFly(entity) && !entity.getType().name().equals("SHULKER") && !entity.isOnGround() && !(ServerVersion.isServerVersionAtLeast(ServerVersion.V1_13) && (entity).isSwimming());
     }
 

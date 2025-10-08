@@ -202,6 +202,10 @@ public class Settings implements com.songoda.ultimatestacker.api.Settings {
             "This is added only because it looks smoother in game. This is only visual and",
             "doesn't actually effect the item.");
 
+    public static final ConfigSetting STACK_WITH_NEWEST = new ConfigSetting(config, "Items.Stack With Newest", false,
+            "When enabled, new items will stack with the most recently dropped item",
+            "in the area instead of the first one found.");
+
     public static final ConfigSetting ITEM_BLACKLIST = new ConfigSetting(config, "Items.Blacklist", Collections.singletonList("BARRIER"),
             "Items included in this list will stack to default Minecraft amounts.",
             "Material list: https://hub.spigotmc.org/javadocs/spigot/org/bukkit/Material.html",

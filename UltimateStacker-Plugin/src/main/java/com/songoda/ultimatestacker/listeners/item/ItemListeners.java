@@ -30,16 +30,38 @@ public class ItemListeners implements Listener {
 
     @EventHandler
     public void onMerge(ItemMergeEvent event) {
-        int maxItemStackSize = Settings.MAX_STACK_ITEMS.getInt();
-        if (!Settings.STACK_ITEMS.getBoolean()) return;
+        if (!Settings.STACK_ITEMS.getBoolean()) {
+            return;
+        }
 
-        StackedItem stackedItem = UltimateStacker.getInstance().getStackedItemManager().merge(event.getEntity(), event.getTarget(), false, (fromStack, toStack, merged) -> {
-            if (fromStack == null && merged != null) {
-                //merge was successful
-                event.setCancelled(true);
-                event.getEntity().remove(); //remove the item that was merged
-            }
-        });
+        org.bukkit.entity.Item from = event.getEntity();
+        org.bukkit.entity.Item to = event.getTarget();
+
+        if (Settings.STACK_WITH_NEWEST.getBoolean()) {
+            from = event.getTarget();
+            to = event.getEntity();
+        }
+
+        StackedItem stackedFrom = UltimateStacker.getInstance().getStackedItemManager().getStackedItem(from);
+        StackedItem stackedTo = UltimateStacker.getInstance().getStackedItemManager().getStackedItem(to);
+
+        if (stackedFrom == null || stackedTo == null) {
+            return;
+        }
+
+        int totalAmount = stackedFrom.getAmount() + stackedTo.getAmount();
+        int maxStack = Settings.MAX_STACK_ITEMS.getInt();
+
+        if (totalAmount > maxStack) {
+            stackedTo.setAmount(maxStack);
+            stackedFrom.setAmount(totalAmount - maxStack);
+            event.setCancelled(true);
+        } else {
+            stackedTo.setAmount(totalAmount);
+            stackedFrom.destroy();
+            event.setCancelled(true);
+            from.remove();
+        }
     }
 
     @EventHandler

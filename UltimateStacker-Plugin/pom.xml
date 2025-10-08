@@ -156,10 +156,9 @@
         </dependency>
 
         <dependency>
-            <groupId>uk.antiperson</groupId>
-            <artifactId>stackmob</artifactId>
-            <version>4-0-2</version>
-            <scope>provided</scope>
+            <groupId>uk.antiperson.stackmob</groupId>
+            <artifactId>StackMob</artifactId>
+            <version>5.8.2</version>
         </dependency>
 
         <dependency>
