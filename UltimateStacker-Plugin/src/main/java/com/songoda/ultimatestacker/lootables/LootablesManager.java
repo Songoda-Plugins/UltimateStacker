@@ -883,6 +883,89 @@ public class LootablesManager {
         lootManager.addLootable(new Lootable("WOLF",
                 new LootBuilder().build()));
 
+        // 1.19 - The Wild Update
+        if (ServerVersion.isServerVersionAtLeast(ServerVersion.V1_19)) {
+            // Allay - Drops 1 Amethyst Shard (100% chance)
+            lootManager.addLootable(new Lootable("ALLAY",
+                    new LootBuilder()
+                            .setMaterial(XMaterial.AMETHYST_SHARD)
+                            .setMin(1)
+                            .setMax(1)
+                            .setChance(100)
+                            .addOnlyDropFors(EntityType.PLAYER).build()));
+
+            // Frog - Drops 1-3 Slime Balls (small) or 1-5 Slime Balls (medium/large)
+            lootManager.addLootable(new Lootable("FROG",
+                    new LootBuilder()
+                            .setMaterial(XMaterial.SLIME_BALL)
+                            .setMin(1)
+                            .setMax(3).build()));
+
+            // Tadpole - Drops 1-3 Slime Balls
+            lootManager.addLootable(new Lootable("TADPOLE",
+                    new LootBuilder()
+                            .setMaterial(XMaterial.SLIME_BALL)
+                            .setMin(1)
+                            .setMax(3).build()));
+
+            // Warden - Drops 1 Sculk Catalyst (100% chance)
+            lootManager.addLootable(new Lootable("WARDEN",
+                    new LootBuilder()
+                            .setMaterial(XMaterial.SCULK_CATALYST)
+                            .setMin(1)
+                            .setMax(1)
+                            .setChance(100)
+                            .addOnlyDropFors(EntityType.PLAYER).build()));
+
+            // Axolotl (from 1.17 but might be missing)
+            if (!lootManager.getRegisteredLootables().containsKey("AXOLOTL")) {
+                lootManager.addLootable(new Lootable("AXOLOTL",
+                        new LootBuilder()
+                                .setMaterial(XMaterial.BUCKET)
+                                .setChance(10)
+                                .addOnlyDropFors(EntityType.PLAYER).build()));
+            }
+        }
+
+        // 1.20 - Trails & Tales
+        if (ServerVersion.isServerVersionAtLeast(ServerVersion.V1_20)) {
+            // Camel - No drops in vanilla
+            lootManager.addLootable(new Lootable("CAMEL"));
+
+            // Sniffer - Drops 1-3 Torchflower Seeds
+            lootManager.addLootable(new Lootable("SNIFFER",
+                    new LootBuilder()
+                            .setMaterial(XMaterial.TORCHFLOWER_SEEDS)
+                            .setMin(1)
+                            .setMax(3).build()));
+        }
+
+        // 1.21 - Tricky Trials
+        if (ServerVersion.isServerVersionAtLeast(ServerVersion.V1_21)) {
+            // Breeze - Drops 4-6 Breeze Rods
+            lootManager.addLootable(new Lootable("BREEZE",
+                    new LootBuilder()
+                            .setMaterial(XMaterial.BREEZE_ROD)
+                            .setMin(4)
+                            .setMax(6)
+                            .addOnlyDropFors(EntityType.PLAYER).build()));
+
+            // Bogged (Skeleton variant) - Drops 0-2 Arrows, 0-2 Bones, and 0-1 Tipped Arrow (25% chance)
+            lootManager.addLootable(new Lootable("BOGGED",
+                    new LootBuilder()
+                            .setMaterial(XMaterial.ARROW)
+                            .setMin(0)
+                            .setMax(2).build(),
+                    new LootBuilder()
+                            .setMaterial(XMaterial.BONE)
+                            .setMin(0)
+                            .setMax(2).build(),
+                    new LootBuilder()
+                            .setMaterial(XMaterial.TIPPED_ARROW)
+                            .setChance(25)
+                            .addOnlyDropFors(EntityType.PLAYER).build()));
+        }
+
         lootManager.saveLootables(true);
     }
 
