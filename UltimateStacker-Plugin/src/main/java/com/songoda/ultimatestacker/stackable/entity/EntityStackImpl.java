@@ -197,6 +197,10 @@ public class EntityStackImpl implements EntityStack {
         Vector velocity = killed.getVelocity().clone();
         killed.remove();
         LivingEntity newEntity = takeOneAndSpawnEntity(killed.getLocation());
+        if (Settings.DISABLE_KNOCKBACK.getBoolean()) {
+            velocity = new Vector(0, 0, 0);
+        }
+
         if (newEntity == null) {
             return;
         }
