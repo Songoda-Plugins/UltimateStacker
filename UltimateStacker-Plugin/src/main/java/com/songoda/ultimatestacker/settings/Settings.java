@@ -159,7 +159,8 @@ public class Settings implements com.songoda.ultimatestacker.api.Settings {
             "Should weapons take damage based on the amount of entites in the stack?");
 
     public static final ConfigSetting DISABLE_KNOCKBACK = new ConfigSetting(config, "Entities.Disable Knockback", false,
-            "Should knockback be disabled on unstacked mobs?");
+            "Should knockback be disabled for stacked entities?",
+            "This will prevent entities from being knocked back when hit.");
 
     public static final ConfigSetting SHEAR_IN_ONE_CLICK = new ConfigSetting(config, "Entities.Shear In One Click", false,
             "Should entities be sheared in a single click?");
