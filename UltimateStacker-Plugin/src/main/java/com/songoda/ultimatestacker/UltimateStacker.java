@@ -67,6 +67,7 @@ import org.apache.commons.lang.WordUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.entity.EntityType;
+import org.bukkit.entity.Item;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.PluginManager;
@@ -276,6 +277,18 @@ public class UltimateStacker extends SongodaPlugin {
                     updateHologram(blockStack);
             }
         });
+    }
+
+    public static int getActualItemAmount(Item item) {
+        return UltimateStackerApi.getStackedItemManager().getActualItemAmount(item);
+    }
+
+    public static boolean hasCustomAmount(Item item) {
+        return UltimateStackerApi.getStackedItemManager().isStackedItem(item);
+    }
+
+    public static void updateItemAmount(Item item, int amount) {
+        UltimateStackerApi.getStackedItemManager().getStackedItem(item).setAmount(amount);
     }
 
     public UltimateStackerApi getAPI() {

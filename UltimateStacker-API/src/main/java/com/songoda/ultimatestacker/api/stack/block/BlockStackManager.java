@@ -20,6 +20,10 @@ public interface BlockStackManager {
 
     BlockStack getBlock(Location location);
 
+    default BlockStack getBlock(Block block) {
+        return getBlock(block, null);
+    }
+
     BlockStack getBlock(Block block, XMaterial material);
 
     BlockStack createBlock(Location location, XMaterial material);
