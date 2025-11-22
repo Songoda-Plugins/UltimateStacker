@@ -24,7 +24,10 @@ import org.bukkit.persistence.PersistentDataContainer;
 import org.bukkit.persistence.PersistentDataType;
 import org.bukkit.util.Vector;
 
+import java.math.BigDecimal;
+import java.math.BigInteger;
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
 import java.util.UUID;
 
@@ -301,5 +304,10 @@ public class EntityStackImpl implements EntityStack {
 
         hostEntity.setCustomNameVisible(!Settings.HOLOGRAMS_ON_LOOK_ENTITY.getBoolean());
         hostEntity.setCustomName(Methods.compileEntityName(hostEntity, getAmount()));
+    }
+
+    @Override
+    public Map<ItemStack, BigInteger> calculateLoot(int amount) {
+        return plugin.getLootablesManager().getStackedDrops(plugin.getLootablesManager().getDrops(this.hostEntity, amount));
     }
 }

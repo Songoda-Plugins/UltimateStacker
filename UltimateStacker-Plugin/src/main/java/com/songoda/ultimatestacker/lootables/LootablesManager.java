@@ -25,8 +25,11 @@ import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.inventory.ItemStack;
 
 import java.io.File;
+import java.math.BigDecimal;
+import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.concurrent.ThreadLocalRandom;
 import java.util.stream.Collectors;
 
@@ -72,6 +75,26 @@ public class LootablesManager {
         }
 
         return toDrop;
+    }
+
+    public static Map<ItemStack, BigInteger> getStackedDrops(List<Drop> drops) {
+        Map<ItemStack, BigInteger> stackedDrops = new java.util.HashMap<>();
+
+        // Get stacked drops, if a stack goes above the max integer value, split it into multiple stacks
+        for (Drop drop : drops) {
+            if (drop == null || drop.getItemStack() == null) continue;
+            ItemStack dropItem = drop.getItemStack();
+            int dropAmount = drop.getItemStack().getAmount();
+            if (stackedDrops.containsKey(dropItem)) {
+                BigInteger currentAmount = stackedDrops.get(dropItem);
+                BigInteger newAmount = currentAmount.add(BigInteger.valueOf(dropAmount));
+                stackedDrops.put(dropItem, newAmount);
+            } else {
+                stackedDrops.put(dropItem, BigInteger.valueOf(dropAmount));
+            }
+        }
+
+        return stackedDrops;
     }
 
     private List<Drop> runLoot(LivingEntity entity, Loot loot, int rerollChance, int looting) {
