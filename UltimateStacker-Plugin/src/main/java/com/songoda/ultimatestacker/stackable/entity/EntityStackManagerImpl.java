@@ -96,12 +96,8 @@ public class EntityStackManagerImpl implements EntityStackManager {
     public EntityStack updateStack(LivingEntity oldEntity, LivingEntity newEntity) {
         EntityStack stack = getStackedEntity(oldEntity);
         if (stack == null) return null;
-        int amount = stack.getAmount() - 1;
-        stack.destroy();
-        if (amount == 0 && newEntity != null) {
-            newEntity.remove();
-            return null;
-        }
-        return createStackedEntity(newEntity, amount);
+        // Update host entity on stack
+        ((EntityStackImpl) stack).setHostEntity(newEntity);
+        return stack;
     }
 }

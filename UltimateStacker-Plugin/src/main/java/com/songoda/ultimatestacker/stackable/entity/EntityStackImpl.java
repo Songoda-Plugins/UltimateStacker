@@ -13,6 +13,7 @@ import com.songoda.ultimatestacker.utils.Async;
 import com.songoda.ultimatestacker.utils.Methods;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
+import org.bukkit.NamespacedKey;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.ExperienceOrb;
 import org.bukkit.entity.LivingEntity;
@@ -117,7 +118,7 @@ public class EntityStackImpl implements EntityStack {
 
     @Override
     public int getAmount() {
-        return amount;
+        return this.amount;
     }
 
     @Override
@@ -125,7 +126,7 @@ public class EntityStackImpl implements EntityStack {
         this.amount = amount;
         if (ServerVersion.isServerVersionAtLeast(ServerVersion.V1_14)) {
             PersistentDataContainer container = hostEntity.getPersistentDataContainer();
-            container.set((org.bukkit.NamespacedKey) STACKED_ENTITY_KEY, PersistentDataType.INTEGER, amount);
+            container.set((NamespacedKey) STACKED_ENTITY_KEY, PersistentDataType.INTEGER, amount);
         } else {
             hostEntity.setMetadata("US_AMOUNT", new FixedMetadataValue(UltimateStacker.getInstance(), amount));
         }
@@ -165,13 +166,17 @@ public class EntityStackImpl implements EntityStack {
     }
 
     private void handleWholeStackDeath(LivingEntity killed, List<Drop> drops, boolean custom, int droppedExp, EntityDeathEvent event) {
+        EntityStackKillEvent stackKillEvent = new EntityStackKillEvent(this, true, event);
+        Bukkit.getPluginManager().callEvent(stackKillEvent);
+        if (stackKillEvent.isCancelled()) return; // Cancelling plugin should handle everything
 
         EntityStack stack = plugin.getEntityStackManager().getStackedEntity(killed);
         // In versions 1.14 and below experience is not dropping. Because of this we are doing this ourselves.
         if (ServerVersion.isServerVersionAtOrBelow(ServerVersion.V1_14)) {
             Location killedLocation = killed.getLocation();
-            if (droppedExp > 0)
+            if (droppedExp > 0) {
                 killedLocation.getWorld().spawn(killedLocation, ExperienceOrb.class).setExperience(droppedExp * getAmount());
+            }
         } else {
             event.setDroppedExp(droppedExp * getAmount());
         }
@@ -188,34 +193,50 @@ public class EntityStackImpl implements EntityStack {
             });
         }
 
+        if (stackKillEvent.getNewStackSize() > 0) {
+            // Spawn new entity with the new stack size
+            LivingEntity newEntity = spawnNewEntity(killed.getLocation(), stackKillEvent.getNewStackSize());
+            if (newEntity != null) {
+                Vector velocity = killed.getVelocity().clone();
+                if (Settings.DISABLE_KNOCKBACK.getBoolean()) {
+                    velocity = new Vector(0, 0, 0);
+                }
+                newEntity.setVelocity(velocity);
+                plugin.getEntityStackManager().updateStack(killed, newEntity);
+            }
+        }
+
         event.getDrops().clear();
-        destroy();
         if (killed.getKiller() == null) return;
-        plugin.addExp(killed.getKiller(), this);
+        plugin.addExp(killed.getKiller(), this); // Run experience hooks for like Jobs plugin and similar
     }
 
     private void handleSingleStackDeath(LivingEntity killed, List<Drop> drops, int droppedExp, EntityDeathEvent event) {
-        Bukkit.getPluginManager().callEvent(new EntityStackKillEvent(this, false));
+        EntityStackKillEvent stackKillEvent = new EntityStackKillEvent(this, false, event);
+        Bukkit.getPluginManager().callEvent(stackKillEvent);
+        if (stackKillEvent.isCancelled()) return; // Cancelling plugin should handle everything
+
+        // In versions 1.14 and below experience is not dropping. Because of this we are doing this ourselves.
+        if (ServerVersion.isServerVersionAtOrBelow(ServerVersion.V1_14)) {
+            Location killedLocation = killed.getLocation();
+            if (droppedExp > 0) {
+                killedLocation.getWorld().spawn(killedLocation, ExperienceOrb.class).setExperience(droppedExp);
+            }
+        }
+        if (plugin.getCustomEntityManager().getCustomEntity(killed) == null) {
+            DropUtils.processStackedDrop(killed, drops, event);
+        }
 
         Vector velocity = killed.getVelocity().clone();
         killed.remove();
-        LivingEntity newEntity = takeOneAndSpawnEntity(killed.getLocation());
-        if (Settings.DISABLE_KNOCKBACK.getBoolean()) {
-            velocity = new Vector(0, 0, 0);
-        }
+        LivingEntity newEntity = spawnNewEntity(killed.getLocation(), stackKillEvent.getNewStackSize());
 
         if (newEntity == null) {
             return;
         }
 
-        // In versions 1.14 and below experience is not dropping. Because of this we are doing this ourselves.
-        if (ServerVersion.isServerVersionAtOrBelow(ServerVersion.V1_14)) {
-            Location killedLocation = killed.getLocation();
-            if (droppedExp > 0)
-                killedLocation.getWorld().spawn(killedLocation, ExperienceOrb.class).setExperience(droppedExp);
-        }
-        if (plugin.getCustomEntityManager().getCustomEntity(killed) == null) {
-            DropUtils.processStackedDrop(killed, drops, event);
+        if (Settings.DISABLE_KNOCKBACK.getBoolean()) {
+            velocity = new Vector(0, 0, 0);
         }
 
         newEntity.setVelocity(velocity);
@@ -251,6 +272,13 @@ public class EntityStackImpl implements EntityStack {
     public synchronized LivingEntity takeOneAndSpawnEntity(Location location) {
         if (amount <= 0) return null;
 
+        return spawnNewEntity(location, amount--);
+    }
+
+    @Override
+    public LivingEntity spawnNewEntity(Location location, int amount) {
+        if (amount <= 0) return null;
+
         return (LivingEntity) Objects.requireNonNull(location.getWorld()).spawn(location, Objects.requireNonNull(hostEntity.getType().getEntityClass()), spawnedEntity -> {
             // It should always be a living entity, but just in case check it
             if (spawnedEntity instanceof LivingEntity) {
@@ -259,11 +287,12 @@ public class EntityStackImpl implements EntityStack {
                     Nms.getImplementations().getEntity().setMobAware(livingEntity, false);
                 }
                 this.hostEntity = livingEntity;
-                setAmount(amount--);
+                setAmount(amount);
                 updateNameTag();
             }
         });
     }
+
 
     @Override
     public synchronized void releaseHost() {
@@ -299,8 +328,9 @@ public class EntityStackImpl implements EntityStack {
     }
 
     public void updateNameTag() {
-        if (hostEntity == null)
+        if (hostEntity == null) {
             return;
+        }
 
         hostEntity.setCustomNameVisible(!Settings.HOLOGRAMS_ON_LOOK_ENTITY.getBoolean());
         hostEntity.setCustomName(Methods.compileEntityName(hostEntity, getAmount()));
@@ -309,5 +339,9 @@ public class EntityStackImpl implements EntityStack {
     @Override
     public Map<ItemStack, BigInteger> calculateLoot(int amount) {
         return plugin.getLootablesManager().getStackedDrops(plugin.getLootablesManager().getDrops(this.hostEntity, amount));
+    }
+
+    public void setHostEntity(LivingEntity newEntity) {
+        this.hostEntity = newEntity;
     }
 }

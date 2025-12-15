@@ -44,6 +44,15 @@ public interface EntityStack extends Stackable {
     LivingEntity takeOneAndSpawnEntity(Location location);
 
     /**
+     * Spawns a new entity from the stack at the given location with the specified amount.
+     *
+     * @param location The location to spawn the entities.
+     * @param amount The number of entities to spawn.
+     * @return The LivingEntity that was spawned.
+     */
+    LivingEntity spawnNewEntity(Location location, int amount);
+
+    /**
      * Release the host entity from being managed by this stack.
      * After calling this, the host entity will no longer be part of the stack.
      */

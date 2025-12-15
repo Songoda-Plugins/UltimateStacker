@@ -3,6 +3,7 @@ package com.songoda.ultimatestacker.api.stack.entity;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.UUID;
 
@@ -59,7 +60,11 @@ public interface EntityStackManager {
     EntityStack transferStack(LivingEntity oldEntity, LivingEntity newEntity, boolean takeOne);
 
     /**
-     * TODO: Add javadoc
+     * Updates the stack's host entity to a new entity.
+     * @param oldEntity The old entity that is being replaced.
+     * @param newEntity The new entity that will be the host of the stack.
+     * @return The updated stack or null if the old entity was not stacked.
      */
+    @Nullable
     EntityStack updateStack(LivingEntity oldEntity, LivingEntity newEntity);
 }

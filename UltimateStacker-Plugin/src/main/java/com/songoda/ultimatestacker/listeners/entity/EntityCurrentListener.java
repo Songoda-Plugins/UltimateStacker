@@ -1,6 +1,7 @@
 package com.songoda.ultimatestacker.listeners.entity;
 
 import com.songoda.ultimatestacker.UltimateStacker;
+import com.songoda.ultimatestacker.api.events.entity.EntityStackKillEvent;
 import com.songoda.ultimatestacker.api.stack.entity.EntityStack;
 import com.songoda.ultimatestacker.api.stack.entity.EntityStackManager;
 import org.bukkit.entity.LivingEntity;
