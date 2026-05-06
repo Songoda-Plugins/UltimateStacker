@@ -102,18 +102,28 @@ public class StackingTask extends BukkitRunnable {
                 }
                 entities.removeAll(remove);
 
+                List<UUID> markedForProcessing = entities.stream().map(LivingEntity::getUniqueId).collect(Collectors.toList());
+
+                 //Run the stacking process on the main thread
                 Bukkit.getScheduler().runTask(plugin, () -> {
                     // Loop through the entities.
-                    for (LivingEntity entity : entities) {
+                    // Re-fetch entities to avoid state changes
+                    List<LivingEntity> currentEntities = markedForProcessing.stream()
+                            .map(Bukkit::getEntity)
+                            .filter(e -> e instanceof LivingEntity && e.isValid())
+                            .map(e -> (LivingEntity) e)
+                            .collect(Collectors.toList());
+
+                    for (LivingEntity entity : currentEntities) {
                         // Make sure our entity has not already been processed.
                         // Skip it if it has been.
                         if (processed.contains(entity.getUniqueId())) continue;
 
-                        // Get entity location to pass around as its faster this way.
+                        // Get entity location to pass around as it's faster this way.
                         Location location = entity.getLocation();
 
                         // Process the entity.
-                        processEntity(entity, location, entities);
+                        processEntity(entity, location, currentEntities);
                     }
                 });
             }

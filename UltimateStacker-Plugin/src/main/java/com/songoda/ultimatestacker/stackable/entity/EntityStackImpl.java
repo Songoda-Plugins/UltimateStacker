@@ -99,7 +99,8 @@ public class EntityStackImpl implements EntityStack {
         if (entity == null) return;
         this.hostEntity = entity;
         if (amount <= 0) {
-            throw new IllegalArgumentException("Amount must be greater than 0");
+            // Set the amount to 1 if the provided amount is less than or equal to 0
+            amount = 1;
         }
         this.amount = amount;
         if (ServerVersion.isServerVersionAtLeast(ServerVersion.V1_14)) {

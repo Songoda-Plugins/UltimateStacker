@@ -4,7 +4,7 @@
     <parent>
         <groupId>com.songoda</groupId>
         <artifactId>UltimateStacker-Parent</artifactId>
-        <version>4.7.0</version>
+        <version>4.8.0</version>
     </parent>
     <artifactId>UltimateStacker-Plugin</artifactId>
 
@@ -13,7 +13,7 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-shade-plugin</artifactId>
-                <version>3.6.0</version>
+                <version>3.6.2</version>
 
                 <executions>
                     <execution>
